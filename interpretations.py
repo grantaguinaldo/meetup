@@ -12,7 +12,8 @@ def get_panel_url(url):
     '''
     Takes a url and gets all of the urls from the sections in the left side bar.
     '''
-    data = r.get(url)
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    data = r.get(url, headers=headers)
     page_data = soup(data.text, 'html.parser')
     panel_listing = page_data.find_all('div', class_='dot-regulations-sidebar-panel-listing')[0]
     url_list = [each.get('onclick') for each in panel_listing.find_all('li')]
@@ -29,7 +30,8 @@ def get_page_urls(url):
     Takes a url, and get's all of the urls needed to paginate through the give section.
     '''
     results = []
-    data = soup(r.get(url).text, 'html.parser')
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    data = soup(r.get(url, headers=headers).text, 'html.parser')
     try:
         last_page = int(data.find_all('ul', class_='pager')[0].find_all('a')[-1].get('href').split('=')[-1])
         results = [url + '?page=' + str(each) for each in range(last_page + 1)]
@@ -41,7 +43,8 @@ def parse_single_page(url):
     '''
     Obtains data from each page and stores in a list of dictionaries.
     '''
-    data = r.get(url)
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    data = r.get(url, headers=headers)
     page_data = soup(data.text, 'html.parser')
     page_datatable_data = page_data.find_all('table', class_="dot-table dot-regulations-table tablesaw tablesaw-stack")[0]
     table_body_data = page_datatable_data.find_all('tr')
@@ -66,7 +69,8 @@ def getUrl(url):
     '''
     Parses each `response_url` and gets the url of of the .pdf file. Structure 1.
     '''
-    data = r.get(url)
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    data = r.get(url, headers=headers)
     page_data = soup(data.text, 'html.parser')
     class1 = 'dot-regulations-content-inner-wrapper'
     class2 = 'document--set file--attachment field field--name-field-document field--type-file field--label-hidden clearfix field__item'
@@ -75,7 +79,7 @@ def getUrl(url):
     if str(pdf_url1).split('.')[-1] == 'pdf':
         pdf_url = 'https://www.phmsa.dot.gov' + pdf_url1
     else:
-        data = r.get('https://www.phmsa.dot.gov' + pdf_url1)
+        data = r.get('https://www.phmsa.dot.gov' + pdf_url1, headers=headers)
         page_data = soup(data.text, 'html.parser')
         pdf_url = page_data.find_all('div', class_=class2)[0].find('a').get('href')
     return pdf_url
@@ -84,13 +88,14 @@ def getUrl2(url):
     '''
     Parses each `response_url` and gets the url of of the .pdf file. Structure 1.
     '''
-    data = r.get(url)
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    data = r.get(url, headers=headers)
     page_data = soup(data.text, 'html.parser')
     class1 = 'dot-regulations-content-inner-wrapper'
     class2 = 'field-item even'
     iurl = page_data.find_all('div', class_=class1)[0].find('a').get('href')
     full_url = 'https://www.phmsa.dot.gov' + iurl
-    page_data2 = soup(r.get(full_url).text, 'html.parser')
+    page_data2 = soup(r.get(full_url, headers=headers).text, 'html.parser')
     pdf_url =  page_data2.find_all('div', class_=class2)[0].find('a').get('href')
     return pdf_url
 
@@ -136,7 +141,7 @@ def check(parsed_data, raw_data):
         return False
       
 part_191 = 'https://www.phmsa.dot.gov/regulations/title49/part/191'
-part_192 = 'https://www.phmsa.dot.gov/regulations/title49/part/192'
+# part_192 = 'https://www.phmsa.dot.gov/regulations/title49/part/192'
 
 all_url = [i for j in [get_page_urls(url) for url in get_panel_url(part_191)] for i in j]
 print('Step 1')
