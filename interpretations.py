@@ -65,6 +65,18 @@ def parse_single_page(url):
         results.append(results_dict)
     return results
 
+def get_num_entires_on_single_page(url):
+    '''
+    Obtains the total number of entires on a single page as an int.
+    '''
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    data = r.get(url, headers=headers)
+    page_data = soup(data.text, 'html.parser')
+    page_datatable_data = page_data.find_all('table', class_="dot-table dot-regulations-table tablesaw tablesaw-stack")[0]
+    table_body_data = page_datatable_data.find_all('tr')
+    table_len = len(table_body_data[1:])
+    return table_len
+
 def getUrl(url):
     '''
     Parses each `response_url` and gets the url of of the .pdf file. Structure 1.
