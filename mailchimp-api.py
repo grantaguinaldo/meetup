@@ -26,10 +26,11 @@ def create_campaign(API_KEY, USER_NAME, body_text, intro_text):
                            'type': 'regular'}
 
     create_new_campaign = client.campaigns.create(data=data) 
+    
+    string_data = string_template.safe_substitute(body_text=body_text, intro_text=intro_text)
     updated_campaign = client.campaigns.content.update(campaign_id=create_new_campaign['id'], 
                                     data={'message': 'Updates from SMYS.', 
-                                          'html': string_template.safe_substitute(body_text=body_text, 
-                                                                                  intro_text=intro_text)})
+                                          'html': string_data})
     return updated_campaign   
 
 create = create_campaign(API_KEY=API_KEY, USER_NAME=USER_NAME, body_text=body_text, intro_text=intro_text)
