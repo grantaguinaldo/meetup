@@ -11,8 +11,8 @@ date = str(current_ts.strftime("%B %d, %Y"))
 body_text = 'Body Text. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
 intro_text = '<strong>' + date + '</strong>' + ': SMYS has found updates to the Federal Register for PHMSA.'
 
-API_KEY = 'ae075d1c936e073b8626dc7c809cf3bd-us6'
-USER_NAME = 'meetsmys'
+API_KEY = API_KEY
+USER_NAME = USER_NAME
 
 def create_campaign(API_KEY, USER_NAME, body_text, intro_text):
     client = MailChimp(mc_api=API_KEY, mc_user=USER_NAME)
